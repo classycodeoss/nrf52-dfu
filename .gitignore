@@ -50,3 +50,12 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+nRF-Command-Line-Tools_9_8_1_OSX.tar
+nRF5_SDK_15.2.0_9412b96.zip
+patched
+sdk/nRF-Command-Line-Tools_9_8_1_OSX
+sdk/nRF5_SDK_15.2.0_9412b96
+gcc-arm-none-eabi-7-2018-q2-update-mac.tar.bz2
+toolchain/gcc-arm-none-eabi-7-2018-q2-update
+
