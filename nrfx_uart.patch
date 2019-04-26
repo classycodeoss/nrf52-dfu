@@ -1,0 +1,12 @@
+--- sdk/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_uart.c.old	2018-11-07 17:24:29.000000000 +0100
++++ sdk/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_uart.c	2018-11-07 17:24:33.000000000 +0100
+@@ -406,7 +406,8 @@
+ 
+     if ((!p_cb->rx_enabled) && (!second_buffer))
+     {
+-        rx_enable(p_instance);
++        // rx_enable(p_instance);
++        nrfx_uart_rx_enable(p_instance);
+     }
+ 
+     if (p_cb->handler == NULL)
