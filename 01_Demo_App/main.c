@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "nrf_gpio.h"
 #include "nrf_sdh.h"
+#include "nrf_power.h"
 #include "nrf_pwr_mgmt.h"
 #include "app_timer.h"
 
@@ -91,5 +92,8 @@ static void timer_tick_callback(void *p_context)
     int btnPressed = !nrf_gpio_pin_read(BTN);
     if (btnPressed) {
         setLed(1);
+        // 0xB1 tells the bootloader to enter DFU mode.
+        nrf_power_gpregret_set(nrf_power_gpregret_get() | 0xB1);
+        sd_nvic_SystemReset(); // should not return
     }
 }

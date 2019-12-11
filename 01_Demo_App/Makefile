@@ -2,13 +2,11 @@ PROJECT_NAME     := dfu_demo_app
 TARGETS          := nrf52832_xxaa
 PROJ_DIR         := .
 OUTPUT_DIRECTORY := _build
-SDK_ROOT         := ../sdk/nRF5SDK160098a08e2
-SOFT_DEVICE      := "${SDK_ROOT}/components/softdevice/s132/hex/s132_nrf52_7.0.1_softdevice.hex"
+SDK_ROOT         := ../sdk/nRF5_SDK_15.2.0_9412b96
+SOFT_DEVICE      := "${SDK_ROOT}/components/softdevice/s132/hex/s132_nrf52_6.1.0_softdevice.hex"
 
-GNU_INSTALL_ROOT := ../toolchain/gcc-arm-none-eabi-9-2019-q4-major/bin/
-GNU_VERSION      := 9.2.1
-
-HW_DEVICE_ID     ?= 1
+GNU_INSTALL_ROOT := ../toolchain/gcc-arm-none-eabi-7-2018-q2-update/bin/
+GNU_VERSION      := 7.3.1
 
 $(OUTPUT_DIRECTORY)/nrf52832_xxaa.out: \
   LINKER_SCRIPT  := main.ld
@@ -142,7 +140,7 @@ flash: $(OUTPUT_DIRECTORY)/nrf52832_xxaa.hex
 
 # Flash softdevice
 flash_softdevice:
-	@echo Flashing: s132_nrf52_7.0.1_softdevice.hex
+	@echo Flashing: s132_nrf52_6.1.0_softdevice.hex
 	nrfjprog -f nrf52 --program $(SOFT_DEVICE) --sectorerase
 	nrfjprog -f nrf52 --reset
 
