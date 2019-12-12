@@ -2,7 +2,7 @@
 
 Nordic nRF52 firmware update example from secondary MPU
 
-For details, see our blog post: https://...
+For details, see our blog post: https://blog.classycode.com/updating-the-firmware-on-an-nrf52-from-another-microcontroller-b513080dc0cd
 
 
 ## Step by step instructions
@@ -15,6 +15,23 @@ For details, see our blog post: https://...
 The nRF52 SDK is available on the Nordic web site: https://www.nordicsemi.com/Software-and-tools/Software/nRF5-SDK/Download
 
 To download the ARM toolchain, visit the ARM developer web site: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+
+Patch the SDK:
+
+```
+$ patch -p0 < nrfx_uart.patch
+```
+
+Install the uECC library:
+
+```
+$ pushd sdk/nRF5_SDK_15.2.0_9412b96/external/micro-ecc
+$ export GNU_INSTALL_ROOT="$PWD/../../../../toolchain/gcc-arm-none-eabi-7-2018-q2-update/bin/"
+$ git clone https://github.com/kmackay/micro-ecc.git
+$ make -C nrf52hf_armgcc/armgcc
+$ make -C nrf52nf_armgcc/armgcc
+$ popd
+```
 
 
 ### 2 - Create the bootloader
@@ -46,7 +63,7 @@ $ make v1
 $ cd dfu_zip
 $ make clean
 $ make v1
-$ make dfu
+$ make dfu  <-- replace the serial device in the Makefile first!
 ```
 
 
