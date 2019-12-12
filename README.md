@@ -5,7 +5,13 @@ Nordic nRF52 firmware update example
 step by step instructions
 -------------------------
 
-create bootloader:
+Provide the SDK and toolchain in the root directory:
+
+sdk/nRF5_SDK_15.2.0_9412b96
+toolchain/gcc-arm-none-eabi-7-2018-q2-update
+
+
+Create the bootloader:
 
 $ cd 02_Bootloader
 $ make clean
@@ -16,7 +22,7 @@ $ make flash_hex
 -> a serial console connected to the nrf52 should now display @@BOOTLOADER
 
 
-create application v1:
+Create application v1:
 
 $ cd ..
 $ cd 01_Demo_App
@@ -24,7 +30,7 @@ $ make clean
 $ make v1
 
 
-create DFU package, send it to bootloader:
+Create the DFU package, send it to the bootloader:
 
 $ cd dfu_zip
 $ make clean
@@ -32,7 +38,7 @@ $ make v1
 $ make dfu
 
 
-create application v2:
+Create application v2:
 
 $ cd ..
 $ cd 01_Demo_App
@@ -40,14 +46,14 @@ $ make clean
 $ make v2
 
 
-create DFU package:
+Create the DFU package for v2:
 
 $ cd dfu_zip
 $ make clean
 $ make v2
 
 
-create DFU blobs:
+Create v2 DFU blobs:
 
 $ cp app_dfu_package.zip /tmp
 $ pushd /tmp
@@ -61,7 +67,7 @@ $ ./a.out /tmp/nrf52832_xxaa.bin dfu_firmware_bin.h gFirmwareBin
 $ ./a.out /tmp/nrf52832_xxaa.dat dfu_firmware_dat.h gFirmwareDat
 
 
-perform DFU with demo host application:
+Perform DFU with the demo host application:
 
 $ cd ..
 $ cd 04_Demo_Host_Application
