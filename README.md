@@ -12,6 +12,10 @@ For details, see our blog post: https://...
 * sdk/nRF5_SDK_15.2.0_9412b96
 * toolchain/gcc-arm-none-eabi-7-2018-q2-update
 
+The nRF52 SDK is available on the Nordic web site: https://www.nordicsemi.com/Software-and-tools/Software/nRF5-SDK/Download
+
+To download the ARM toolchain, visit the ARM developer web site: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+
 
 ### 2 - Create the bootloader
 
