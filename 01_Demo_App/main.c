@@ -1,3 +1,34 @@
+//
+//  main.c
+//  nrf52-dfu
+//
+//  Sample application to demonstrate the firmware update process.
+//
+//  If APP_VERSION is set to 1, the LED will blink 3 times, then pause and blink again.
+//  If APP_VERSION is set to 2, the LED will blink 4 times, then pause and blink again.
+//  If the user presses a button, the app will trigger a firmware update via bootloader.
+//
+//  Created by Andreas Schweizer on 26.04.2019.
+//  Copyright © 2019 Classy Code GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this
+// software and associated documentation files (the "Software"), to deal in the Software
+// without restriction, including without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to the following
+// conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies
+// or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+// PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+// OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
 #include <stdint.h>
 #include "nrf_gpio.h"
 #include "nrf_sdh.h"
@@ -6,10 +37,10 @@
 #include "app_timer.h"
 
 
-// ANNA-B112 Dev Kit: IO_29, P0.27
+// ANNA-B112 Dev Kit: IO_29, P0.27 -- Modify for your own target hardware!
 #define LED 27
 
-// IO_38
+// IO_38 -- Modify for your board!
 #define BTN 24
 
 
