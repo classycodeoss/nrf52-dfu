@@ -151,3 +151,13 @@ SDK_CONFIG_FILE := ./sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
 sdk_config:
 	java -jar $(CMSIS_CONFIG_TOOL) $(SDK_CONFIG_FILE)
+
+
+# Creating versions 1 and 2 of the app
+
+v1: nrf52832_xxaa
+v1: CFLAGS += -DAPP_VERSION=1
+
+v2: nrf52832_xxaa
+v2: CFLAGS += -DAPP_VERSION=2
+
