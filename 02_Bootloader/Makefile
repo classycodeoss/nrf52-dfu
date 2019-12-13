@@ -131,8 +131,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/softdevice/mbr/nrf52832/headers \
   $(SDK_ROOT)/components/libraries/queue \
   $(SDK_ROOT)/components/libraries/ringbuf \
-  $(PROJ_DIR)/config \
-  $(PROJ_DIR)/../common \
+  $(PROJ_DIR)/config
 
 # Libraries common to all targets
 LIB_FILES += \
