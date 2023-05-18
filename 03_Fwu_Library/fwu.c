@@ -297,7 +297,7 @@ static void fwuYieldProcessFsm(TFwu *fwu, uint32_t elapsedMillisec)
         case FWU_PS_OBJ1_CREATE:
             if (tmpPrivateProcessRequest == FWU_PR_RECEIVED_RESPONSE) {
                 fwu->privateProcessState = FWU_PS_OBJ1_WRITE;
-                fwu->privateObjectBuf = fwu->commandObject;
+                fwu->privateObjectProviderFunction = fwu->commandObjectProviderFunction;
                 fwu->privateObjectLen = fwu->commandObjectLen;
                 fwu->privateObjectIx = 0;
                 fwu->privateObjectCrc = 0xffffffff;
@@ -322,7 +322,7 @@ static void fwuYieldProcessFsm(TFwu *fwu, uint32_t elapsedMillisec)
             // FWU_PS_OBJ1_CRC_GET: Checksum verification
         case FWU_PS_OBJ1_CRC_GET:
             if (tmpPrivateProcessRequest == FWU_PR_RECEIVED_RESPONSE) {
-                uint32_t actualLen = fwuLittleEndianToHost32(&fwu->privateResponseBuf[3]);
+                fwuLittleEndianToHost32(&fwu->privateResponseBuf[3]);
                 uint32_t actualCks = fwuLittleEndianToHost32(&fwu->privateResponseBuf[7]);
                 if (actualCks == ~fwu->privateObjectCrc) {
                     // Checksum is OK; execute the command!
@@ -364,7 +364,7 @@ static void fwuYieldProcessFsm(TFwu *fwu, uint32_t elapsedMillisec)
         case FWU_PS_OBJ2_CREATE:
             if (tmpPrivateProcessRequest == FWU_PR_RECEIVED_RESPONSE) {
                 fwu->privateProcessState = FWU_PS_OBJ2_WRITE;
-                fwu->privateObjectBuf = &fwu->dataObject[fwu->privateDataObjectOffset];
+                fwu->privateObjectProviderFunction = fwu->dataObjectProviderFunction;
                 fwu->privateObjectLen = fwu->privateDataObjectSize;
                 fwu->privateObjectIx = 0;
                 fwuPrepareLargeObjectSendBuffer(fwu, 0x08);
@@ -388,7 +388,7 @@ static void fwuYieldProcessFsm(TFwu *fwu, uint32_t elapsedMillisec)
             // FWU_PS_OBJ2_CRC_GET: Checksum verification
         case FWU_PS_OBJ2_CRC_GET:
             if (tmpPrivateProcessRequest == FWU_PR_RECEIVED_RESPONSE) {
-                uint32_t actualLen = fwuLittleEndianToHost32(&fwu->privateResponseBuf[3]);
+                fwuLittleEndianToHost32(&fwu->privateResponseBuf[3]);
                 uint32_t actualCks = fwuLittleEndianToHost32(&fwu->privateResponseBuf[7]);
                 if (actualCks == ~fwu->privateObjectCrc) {
                     // Checksum is OK; execute the command!
@@ -550,8 +550,10 @@ static void fwuPrepareLargeObjectSendBuffer(TFwu *fwu, uint8_t requestCode)
         bytesTodo = 32;
     }
     
+    uint8_t *srcPtr = fwu->privateObjectProviderFunction(fwu, fwu->privateDataObjectOffset + fwu->privateObjectIx, bytesTodo);
+    
     for (i = 0; i < bytesTodo && bufSpace >= 2; i++) {
-        uint8_t b = fwu->privateObjectBuf[fwu->privateObjectIx];
+        uint8_t b = srcPtr[i];
         // SLIP escape characters: C0->DBDC, DB->DBDD
         if (b == 0xC0 || b == 0xDB) {
             *p++ = 0xDB;
@@ -584,10 +586,18 @@ static void fwuPrepareSendBuffer(TFwu *fwu, uint8_t *data, uint8_t len)
     fwu->privateResponseLen = 0;
 
     // Copy the data into our internal buffer.
+    // Handle SLIP escaping.
     for (i = 0; i < len; i++) {
-        *p++ = *data++;
+        // SLIP escape characters: C0->DBDC, DB->DBDD
+        if ((*data == 0xC0) || (*data == 0xDB))  {
+            *p++ = 0xDB;
+            *p++ = (*data++ == 0xC0) ? 0xDC : 0xDD;
+            fwu->privateRequestLen++;
+        } else {
+            *p++ = *data++;
+        }
     }
-    
+
     // Add the end-of-message marker.
     *p = FWU_EOM;
     
