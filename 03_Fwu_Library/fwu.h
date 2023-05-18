@@ -59,13 +59,15 @@ typedef enum {
 
 typedef void (*FTxFunction)(struct SFwu *fwu, uint8_t *buf, uint8_t len);
 
+typedef uint8_t * (*FDataFunction)(struct SFwu *fwu, int pos, int len);
+
 typedef struct SFwu {
 // --- public - define these before calling fwuInit ---
     // .dat
-    uint8_t *commandObject;
+    FDataFunction commandObjectProviderFunction;
     uint32_t commandObjectLen;
     // .bin
-    uint8_t *dataObject;
+    FDataFunction dataObjectProviderFunction;
     uint32_t dataObjectLen;
     // Sending bytes to the target
     FTxFunction txFunction;
@@ -96,7 +98,7 @@ typedef struct SFwu {
     uint8_t privateCommandRequest;
     uint16_t privateMtuSize;
     // sending a large object buffer
-    uint8_t *privateObjectBuf;
+    FDataFunction privateObjectProviderFunction;
     uint32_t privateObjectLen;
     uint32_t privateObjectIx;
     uint32_t privateObjectCrc;

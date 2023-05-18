@@ -49,11 +49,14 @@ static int sBytesSent;
 
 static TFwu sFwu;
 
+uint8_t *commandObjectProvider(struct SFwu *fwu, int pos, int len);
+uint8_t *dataObjectProvider(struct SFwu *fwu, int pos, int len);
 void txFunction(struct SFwu *fwu, uint8_t *buf, uint8_t len);
 static uint8_t readData(uint8_t *data, int maxLen);
-static void openSerialDevice();
-static void configureSerialDevice();
-static void printResponseStatus();
+static void openSerialDevice(void);
+static void configureSerialDevice(void);
+static void printResponseStatus(void);
+
 
 int main(int argc, char *argv[])
 {
@@ -69,9 +72,11 @@ int main(int argc, char *argv[])
     openSerialDevice();
     configureSerialDevice();
 
-    sFwu.commandObject = gFirmwareDat;
+    // sFwu.commandObject = gFirmwareDat;
+    sFwu.commandObjectProviderFunction = commandObjectProvider;
     sFwu.commandObjectLen = sizeof(gFirmwareDat);
-    sFwu.dataObject = gFirmwareBin;
+    // sFwu.dataObject = gFirmwareBin;
+    sFwu.dataObjectProviderFunction = dataObjectProvider;
     sFwu.dataObjectLen = sizeof(gFirmwareBin);
     sFwu.txFunction = txFunction;
     sFwu.responseTimeoutMillisec = 5000;
@@ -121,6 +126,16 @@ int main(int argc, char *argv[])
     }
 }
 
+uint8_t *commandObjectProvider(struct SFwu *fwu, int pos, int len)
+{
+    return &gFirmwareDat[pos];
+}
+
+uint8_t *dataObjectProvider(struct SFwu *fwu, int pos, int len)
+{
+    return &gFirmwareBin[pos];
+}
+
 void txFunction(struct SFwu *fwu, uint8_t *buf, uint8_t len)
 {
     while (len--) {
@@ -164,7 +179,7 @@ static uint8_t readData(uint8_t *data, int maxLen)
     return n;
 }
 
-static void openSerialDevice()
+static void openSerialDevice(void)
 {
     //  O_NOCTTY: the program doesn't want to be the "controlling terminal" for the port.
     //  O_NDELAY: ignore the DCD signal line.
@@ -176,7 +191,7 @@ static void openSerialDevice()
     printf("serial device successfully opened: '%s'\n", sSerialDevice);
 }
 
-static void configureSerialDevice()
+static void configureSerialDevice(void)
 {
     int res;
     struct termios settings;
@@ -212,7 +227,7 @@ static void configureSerialDevice()
     tcsetattr(sFd, TCSANOW, &settings);
 }
 
-static void printResponseStatus()
+static void printResponseStatus(void)
 {
     switch (sFwu.responseStatus) {
         case FWU_RSP_OK:                        printf("FWU_RSP_OK"); break;

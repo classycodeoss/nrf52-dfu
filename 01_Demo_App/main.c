@@ -40,7 +40,9 @@
 // ANNA-B112 Dev Kit: IO_29, P0.27 -- Modify for your own target hardware!
 #define LED 27
 
-// IO_38 -- Modify for your board!
+// Modify for your board!
+// IO_38 = P0.24 = SW2
+// IO_30 = P0.25 = SW1
 #define BTN 24
 
 
